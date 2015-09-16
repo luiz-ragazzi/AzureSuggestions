@@ -1,0 +1,61 @@
+﻿
+@{
+    Layout = null;
+}
+
+<script src="http://code.jquery.com/jquery-1.11.3.min.js"></script>
+<script src="https://twitter.github.io/typeahead.js/releases/0.10.5/typeahead.bundle.js"></script>
+<script src="http://cdnjs.cloudflare.com/ajax/libs/handlebars.js/2.0.0/handlebars.min.js"></script>
+
+<script>
+    $(function () {
+        var offices = new Bloodhound({
+            datumTokenizer: Bloodhound.tokenizers.obj.whitespace('value'),
+            queryTokenizer: Bloodhound.tokenizers.whitespace,
+            remote: '/search/suggest?q=%QUERY&type=OfficeName&fuzzy=false'
+        });
+
+        offices.initialize();
+
+        $('#remote .typeahead').typeahead(null, {
+            name: 'best-offices',
+            displayKey: 'value',
+            source: offices.ttAdapter(),
+            templates: {
+                suggestion: Handlebars.compile('<p><img src="http://uhyintranetmvc.azurewebsites.net/content/images/profile/{{PersonID}}-thumb.jpg" style= height:40px;width:60px;">&nbsp;<strong>{{PersonName}}</strong>&nbsp;-&nbsp;{{OfficeName}}</p>')
+                //<p><img src="" style="height:40px;width:60px;">&nbsp;<strong>{{PersonName}}</strong>&nbsp;-&nbsp;{{OfficeName}}</p>
+            }
+        }).on('typeahead:selected', function (obj, datum) {
+            console.log(obj);
+            console.log(datum);
+        });
+    });
+
+</script>
+
+
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <title>Azure Search Suggestions Demo</title>
+    <meta name="description" content="Azure Search Suggestions Demo">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="http://twitter.github.io/typeahead.js/css/normalize.min.css">
+    <link rel="stylesheet" href="http://twitter.github.io/typeahead.js/css/main.css">
+</head>
+<body>
+    <div class="sticky-footer-wrapper" style="padding-left:20px;">
+        <h1>Uhy Search</h1>
+        <div id="remote">
+            <input class="typeahead" type="text" placeholder="Search">
+        </div>
+
+
+    </div>
+</body>
+
+
+</html>
